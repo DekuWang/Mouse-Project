@@ -73,9 +73,6 @@ class MouseServer:
                     #Thumb Position for WINDOWS
                     xTpos = winX * (1 - results.right_hand_landmarks.landmark[4].x)
                     yTpos = winY * results.right_hand_landmarks.landmark[4].y
-
-                    # print("XIP: ", xIPos, " YIP: ", yIPos)
-                    # print("XT: ", xTpos, " YT: ", yTpos)
                     
                     #if xIPos > xStart and xIPos < xEnd and yIPos > yStart and yIPos < yEnd, and give some tolerance:
                     if xIPos > (xStart - winX//15) and xIPos < (xEnd + winX //15) and yIPos > (yStart - winY//15) and yIPos < (yEnd + winY//15):
@@ -92,8 +89,6 @@ class MouseServer:
                         yIPect = self.clamp(yIPect)
                         xTPect = self.clamp(xTPect)
                         yTPect = self.clamp(yTPect)
-
-                        # print("XIPercent: ", xIPect, " YIPercent: ", yIPect)
                         
                         # Transfer small coordinate to big screen
                         xSIPos = xIPect * scrX
@@ -118,6 +113,6 @@ class MouseServer:
         cv2.destroyAllWindows()
 
 
-if __name__ == "__main__":
-    mouseServer = MouseServer()
-    mouseServer.runCamera()
+#if __name__ == "__main__":
+mouseServer = MouseServer()
+mouseServer.runCamera()
