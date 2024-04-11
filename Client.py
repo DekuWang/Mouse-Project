@@ -31,9 +31,9 @@ class MouseClient:
         print(connectStatus)
         while connectStatus == 0:
             data = self.receive_Data()
-            testList = data.split(",")
-            print(testList)
-            XIPos, YIPos, XTPos, YTPos = map(int, map(float, testList))
+            xyList = data.split(",")
+            #print(xyList)
+            XIPos, YIPos, XTPos, YTPos = map(int, map(float, xyList))
             self.send_Data("0")
 
             distanceIT = getDistance(XIPos, YIPos, XTPos, YTPos)
