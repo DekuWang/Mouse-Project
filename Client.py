@@ -4,7 +4,7 @@ import time
 import datetime
 
 pyautogui.FAILSAFE = False
-local_server = "localhost"
+local_server = "10.0.0.52"
 local_server_port = 8080
 
 def getDistance(x1,y1,x2,y2):

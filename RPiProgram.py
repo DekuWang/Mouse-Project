@@ -3,7 +3,7 @@ import cv2
 import mediapipe as mp
 import time
 
-host = "localhost"  # Change this to your desired host
+host = ""  # Change this to your desired host
 port = 8080  # Change this to your desired port
 
 class MouseServer:
