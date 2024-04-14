@@ -8,14 +8,17 @@ port = 8080  # Change this to your desired port
 
 class MouseServer:
     def __init__(self):
+        self.funcMode = 99
+        self.runningCode = 0
         self.screenSizes = (0,0)
         self.socketObj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socketObj.bind((host, port))
         self.socketObj.listen(1)
         self.client_socket, self.client_address = self.socketObj.accept()
+        print(f"Connection from {self.client_address}")
 
     # For receving screen sizes from client
-    def receive_Data(self):
+    def receive_SCR_Size(self):
         try:
             data = self.client_socket.recv(1024).decode()
             print(f"Received data: {data}")
@@ -27,7 +30,18 @@ class MouseServer:
     # Send mouse posistion to client
     def send_Data(self, data):
         self.client_socket.sendall(data.encode())
-    
+
+    def modeSetting(self):
+        self.funcMode = int(self.client_socket.recv(1024).decode())
+        if self.funcMode == 1:
+            self.runCameraMoveMouse()
+        elif self.funcMode == 2:
+            self.runCameraClick()
+        elif self.funcMode == 3:
+            self.client_socket.close()
+            self.socketObj.close()
+            exit()
+
     # To limit result between 0 an 1
     def clamp(self, intInput):
         if intInput < 0:
@@ -37,9 +51,9 @@ class MouseServer:
         else:
             return intInput
     
-    def runCamera(self):
+    def runCameraMoveMouse(self):
         # Initialize variables
-        self.receive_Data()
+        self.receive_SCR_Size()
         scrX, scrY = self.screenSizes
         winX, winY = scrX * 2//3, scrY * 2//3
         rectStart = (winX//2 - 2 * winX//10, winY//2 - 2 * winY//10)
@@ -99,20 +113,56 @@ class MouseServer:
                         #send XSIpos, YSIpos, XSTpos, YSTpos to client
                         self.send_Data(f"{xSIPos},{ySIPos},{xSTpos},{ySTpos}")
                         self.client_socket.recv(1)
-                        
-
-                """
-                image = cv2.flip(image, 1)
-                cv2.imshow("image", image)
-
-                if cv2.waitKey(5) & 0xFF == 27:
-                    break
-                """
 
         cap.release()
         cv2.destroyAllWindows()
 
+    def runCameraClick(self):
+        self.receive_SCR_Size()
+        scrX, scrY = self.screenSizes
+
+        mp_holistic = mp.solutions.holistic
+        cap = cv2.VideoCapture(0) # capture using main camera
+
+        with mp_holistic.Holistic() as holistic:
+            while cap.isOpened():
+                success, image = cap.read()
+                if not success:
+                    continue
+                image.flags.writeable = False
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                results = holistic.process(image)
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+                if results.right_hand_landmarks:
+
+                    #Index finger Position for WINDOWS
+                    xIPos = scrX * (1 - results.right_hand_landmarks.landmark[8].x)
+                    yIPos = scrY * (results.right_hand_landmarks.landmark[8].y)
+                    #Thumb Position for WINDOWS
+                    xTpos = scrX * (1 - results.right_hand_landmarks.landmark[4].x)
+                    yTpos = scrY * results.right_hand_landmarks.landmark[4].y
+                    #Middle finger Position for WINDOWS
+                    xMPos = scrX * (1 - results.right_hand_landmarks.landmark[12].x)
+                    yMPos = scrY * results.right_hand_landmarks.landmark[12].y
+                    #Pinky finger Position for WINDOWS
+                    xPPos = scrX * (1 - results.right_hand_landmarks.landmark[20].x)
+                    yPPos = scrY * results.right_hand_landmarks.landmark[20].y
+
+                    self.send_Data(f"{xIPos},{yIPos},{xTpos},{yTpos},{xMPos},{yMPos},{xPPos},{yPPos}")
+                    self.runningCode = int(self.client_socket.recv(1).decode())
+                #print(self.runningCode)
+
+        cap.release()
+        cv2.destroyAllWindows()
+                    
+
 
 #if __name__ == "__main__":
-mouseServer = MouseServer()
-mouseServer.runCamera()
+try:
+    mouseServer = MouseServer()
+    mouseServer.modeSetting()
+except Exception as e:
+    print("Progress Ended")
+    input("Press Enter to exit")

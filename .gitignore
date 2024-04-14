@@ -1,2 +1,6 @@
 /testClient.py
 /testServer.py
+/build
+/dist
+/RPiProgram.spec
+/test.py
