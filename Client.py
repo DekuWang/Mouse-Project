@@ -46,13 +46,16 @@ class MouseClient:
 
             
             elif distanceIT < 100:
-                print(distanceIT)
+                #print(distanceIT)
                 pyautogui.moveTo((XIPos + XTPos)/2, (YIPos + YTPos)/2)
-
-                if distanceIT < 50:
-                    #pyautogui.doubleClick()
-                    print("Double Click")
+                recordedTIme = 0
+                if datetime.datetime.now().timestamp() - recordedTIme < 0.5:
+                    pass
+                elif distanceIT < 75:
+                    pyautogui.Click()
+                    print("Click")
                     time.sleep(0.5)
+                    recordedTIme = datetime.datetime.now().timestamp()
 
             connectStatus = self.socketObj.getsockopt(SOL_SOCKET, SO_ERROR)
         #self.send_Data("1")
@@ -73,9 +76,9 @@ class MouseClient:
             MIDistance = getDistance(xTpos, yTpos, xMPos, yMPos)
             RIDistance = getDistance(xTpos, yTpos, xPPos, yPPos)
 
-            print("TIDistance: ", TIDistance)
+            """print("TIDistance: ", TIDistance)
             print("MIDistance: ", MIDistance)
-            print("RIDistance: ", RIDistance)
+            print("RIDistance: ", RIDistance)"""
 
             if datetime.datetime.now().timestamp() - recordedTIme<0.5:
                 pass

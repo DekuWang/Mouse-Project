@@ -23,8 +23,8 @@ print("yStart: ", yStart, " yEnd: ", yEnd)
 def getDistance(x1,y1,x2,y2):
     return ((x1-x2)**2 + (y1-y2)**2)**0.5 
 
-"""mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles"""
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
 mp_holistic = mp.solutions.holistic
 
@@ -55,12 +55,19 @@ with mp_holistic.Holistic() as holistic:
         rectHeight = yEnd - yStart
 
         # draw right hand
-        """        mp_drawing.draw_landmarks(
+        """        
+        mp_drawing.draw_landmarks(
             image,
             results.right_hand_landmarks, 
             mp_holistic.HAND_CONNECTIONS   
         )"""
 
+        mp_drawing.draw_landmarks(
+            image
+            ,results.left_hand_landmarks
+            ,mp_holistic.HAND_CONNECTIONS
+        )
+        
         if results.right_hand_landmarks:
 
             #Index finger Position for WINDOWS
@@ -114,15 +121,15 @@ with mp_holistic.Holistic() as holistic:
 
                 #print(distanceIT)
                 if  distanceIT >= 100:
-                    #print("Yes")
-                    pyautogui.moveTo(xSIPos, ySIPos)
+                    print("Yes")
+                    #pyautogui.moveTo(xSIPos, ySIPos)
 
                 
                 elif distanceIT < 100:
                     xSTpos = xTPect * scrX
                     ySTpos = yTPect * scrY
                     print(distanceIT)
-                    pyautogui.moveTo((xSIPos + xSTpos)/2, (ySIPos + ySTpos)/2)
+                    #pyautogui.moveTo((xSIPos + xSTpos)/2, (ySIPos + ySTpos)/2)
 
                     if distanceIT < 15:
                         #pyautogui.doubleClick()
