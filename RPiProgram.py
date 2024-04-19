@@ -6,6 +6,9 @@ import time
 host = ""  # Change this to your desired host
 port = 8080  # Change this to your desired port
 
+def getDistance(x1,y1,x2,y2):
+    return ((x2-x1)**2 + (y2-y1)**2)**0.5
+
 class MouseServer:
     def __init__(self):
         self.funcMode = 99
@@ -150,8 +153,9 @@ class MouseServer:
                     xPPos = scrX * (1 - results.right_hand_landmarks.landmark[20].x)
                     yPPos = scrY * results.right_hand_landmarks.landmark[20].y
 
-                    self.send_Data(f"{xIPos},{yIPos},{xTpos},{yTpos},{xMPos},{yMPos},{xPPos},{yPPos}")
-                    self.runningCode = int(self.client_socket.recv(1).decode())
+                    if getDistance(xTpos, yTpos, xMPos, yMPos) < 75 or getDistance(xTpos, yTpos, xPPos, yPPos) < 75 or getDistance(xIPos, yIPos, xTpos, yTpos) < 75:
+                        self.send_Data(f"{xIPos},{yIPos},{xTpos},{yTpos},{xMPos},{yMPos},{xPPos},{yPPos}")
+                        self.runningCode = int(self.client_socket.recv(1).decode())
                 #print(self.runningCode)
 
         cap.release()

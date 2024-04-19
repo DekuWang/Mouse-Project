@@ -48,7 +48,7 @@ class MouseClient:
             elif distanceIT < 100:
                 #print(distanceIT)
                 pyautogui.moveTo((XIPos + XTPos)/2, (YIPos + YTPos)/2)
-                recordedTIme = 0
+                recordedTIme = datetime.datetime.now().timestamp()
                 if datetime.datetime.now().timestamp() - recordedTIme < 0.5:
                     pass
                 elif distanceIT < 75:
@@ -72,6 +72,7 @@ class MouseClient:
             recvData = self.receive_Data()
             #print(recvData)
             xIPos, yIPos, xTpos, yTpos, xMPos, yMPos, xPPos, yPPos = map(int, map(float, recvData.split(",")))
+            print("xIPos: ", xIPos, " yIPos: ", yIPos, " xTpos: ", xTpos, " yTpos: ", yTpos, " xMPos: ", xMPos, " yMPos: ", yMPos, " xPPos: ", xPPos, " yPPos: ", yPPos)
             TIDistance = getDistance(xIPos, yIPos, xTpos, yTpos)
             MIDistance = getDistance(xTpos, yTpos, xMPos, yMPos)
             RIDistance = getDistance(xTpos, yTpos, xPPos, yPPos)
@@ -91,7 +92,7 @@ class MouseClient:
                 print("Double Click")  
                 recordedTIme = datetime.datetime.now().timestamp()
             
-            if RIDistance < 75:
+            if RIDistance < 50:
                 #self.send_Data("1")
                 print(1)
                 self.exitProgram()
