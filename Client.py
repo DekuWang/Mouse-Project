@@ -4,7 +4,7 @@ import time
 import datetime
 
 pyautogui.FAILSAFE = False
-local_server = "10.0.0.52"
+local_server = "10.0.0.42"
 local_server_port = 8080
 
 def getDistance(x1,y1,x2,y2):
@@ -77,9 +77,9 @@ class MouseClient:
             MIDistance = getDistance(xTpos, yTpos, xMPos, yMPos)
             RIDistance = getDistance(xTpos, yTpos, xPPos, yPPos)
 
-            """print("TIDistance: ", TIDistance)
+            print("TIDistance: ", TIDistance)
             print("MIDistance: ", MIDistance)
-            print("RIDistance: ", RIDistance)"""
+            print("RIDistance: ", RIDistance)
 
             if datetime.datetime.now().timestamp() - recordedTIme<0.5:
                 pass

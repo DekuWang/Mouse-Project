@@ -168,5 +168,8 @@ try:
     mouseServer = MouseServer()
     mouseServer.modeSetting()
 except Exception as e:
+    mouseServer.client_socket.close()
+    mouseServer.socketObj.close()
     print("Progress Ended")
     input("Press Enter to exit")
+    
