@@ -1,3 +1,6 @@
+"""
+Run this program on your RPI device first
+"""
 import socket
 import cv2
 import mediapipe as mp

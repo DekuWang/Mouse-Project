@@ -1,10 +1,15 @@
+"""
+Run the RPiPRogram.py on the Raspberry Pi first, and then run this one on the device you want to control
+"""
 from socket import socket, SOL_SOCKET, SO_ERROR, gethostname, gethostbyname
 import pyautogui
 import time
 import datetime
 
 pyautogui.FAILSAFE = False
-local_server = "10.0.0.42"
+local_server = input("Enter the RPi IP Address of the server: ")
+if local_server == "":
+    local_server = "localhost"
 local_server_port = 8080
 
 def getDistance(x1,y1,x2,y2):
